@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Efootball Coins Payment</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#edf2ff;
+  color:#172554;
+}
+.container{
+  max-width:480px;
+  margin:30px auto;
+  padding:20px;
+}
+.card{
+  background:white;
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 5px 25px #0001;
+}
+h2{text-align:center;color:#123b72}
+input{
+  width:100%;
+  padding:14px;
+  margin:9px 0 16px;
+  border:1px solid #ccd5e5;
+  border-radius:9px;
+  font-size:16px;
+}
+.method{
+  padding:15px;
+  border:2px solid #ddd;
+  border-radius:10px;
+  margin:10px 0;
+  cursor:pointer;
+  font-weight:bold;
+}
+.method.active{border-color:#e2136e;background:#fff0f6}
+button{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:10px;
+  background:#e2136e;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+#paymentInfo{
+  background:#f1f5ff;
+  padding:15px;
+  border-radius:10px;
+  margin:15px 0;
+  display:none;
+}
+.small{text-align:center;color:#64748b;font-size:13px}
+</style>
+</head>
+
+<body>
+<div class="container">
+<div class="card">
+
+<h2>⚽ EFOOTBALL COINS</h2>
+<p class="small">Fast & Secure Manual Payment</p>
+
+<h3>Payment Amount (৳)</h3>
+<input type="number" id="amount" min="1"
+placeholder="Enter Amount" value="100">
+
+<h3>Select Payment Method</h3>
+
+<div class="method active" onclick="choose('bkash',this)">
+💗 bKash
+</div>
+
+<div class="method" onclick="choose('nagad',this)">
+🟠 Nagad
+</div>
+
+<div id="paymentInfo">
+<p>Send Money to this number:</p>
+<h3 id="number">01XXXXXXXXX</h3>
+<button type="button" onclick="copyNumber()">
+Copy Number
+</button>
+<p class="small">
+Send Money করে Transaction ID নিচে দাও।
+</p>
+</div>
+
+<h3>Your Payment Details</h3>
+
+<label>Your Mobile Number</label>
+<input id="sender" placeholder="01XXXXXXXXX"
+inputmode="numeric">
+
+<label>Transaction ID (TrxID)</label>
+<input id="trx" placeholder="Enter Transaction ID">
+
+<button onclick="submitPayment()">
+Submit Payment
+</button>
+
+<p class="small">
+Never share your PIN or OTP.
+</p>
+
+</div>
+</div>
+
+<script>
+const BKASH_NUMBER = "01609776950";
+const NAGAD_NUMBER = "01609776950";
+
+// এখানে তোমার WhatsApp নম্বর বসাবে
+const WHATSAPP_NUMBER = "8801792099696";
+
+let method = "bkash";
+
+function choose(type,element){
+  method=type;
+  document.querySelectorAll(".method")
+  .forEach(x=>x.classList.remove("active"));
+  element.classList.add("active");
+
+  document.getElementById("paymentInfo").style.display="block";
+
+  document.getElementById("number").innerText=
+  type==="bkash"?BKASH_NUMBER:NAGAD_NUMBER;
+}
+
+function copyNumber(){
+  const number=method==="bkash"?BKASH_NUMBER:NAGAD_NUMBER;
+  navigator.clipboard.writeText(number)
+  .then(()=>alert("Number Copied!"))
+  .catch(()=>alert("Number: "+number));
+}
+
+function submitPayment(){
+  const amount=document.getElementById("amount").value;
+  const sender=document.getElementById("sender").value.trim();
+  const trx=document.getElementById("trx").value.trim();
+
+  if(!amount || Number(amount)<=0 || !sender || !trx){
+    alert("Please fill all fields correctly.");
+    return;
+  }
+
+  const number=method==="bkash"?BKASH_NUMBER:NAGAD_NUMBER;
+
+  const message=
+  "Efootball Coins Payment Request\n"+
+  "Amount: "+amount+" BDT\n"+
+  "Method: "+method.toUpperCase()+"\n"+
+  "Receiver: "+number+"\n"+
+  "Sender: "+sender+"\n"+
+  "Transaction ID: "+trx;
+
+  const url="https://wa.me/"+WHATSAPP_NUMBER+
+  "?text="+encodeURIComponent(message);
+
+  window.open(url,"_blank");
+}
+
+choose("bkash",document.querySelector(".method"));
+</script>
+</body>
+</html>
